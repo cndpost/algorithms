@@ -7,10 +7,10 @@
 #include <string>
 #include <queue>
 
-#define DEBUG 1
+//#define DEBUG 1
 
 int Ord(char ch) {
-	return (ch - 'a');
+	return (ch - 'a')+1;
 };
 
 int  *CreateRtOccurence(std::string pattern, int s)
@@ -30,10 +30,19 @@ int  *CreateRtOccurence(std::string pattern, int s)
 	for (int i = 0; i < s; i++) {
 		std::cout << rt[i] << std::endl;
 	}
+	std::cin >> m;
 #endif
 
 	return rt;
 
+};
+
+int max (int a, int b)
+{
+	if (a >= b)
+		return a;
+	else
+		return b;
 };
 
 std::deque<int> *BoyerMooreHorspool(std::string pattern, std::string text, int s)
@@ -61,9 +70,10 @@ std::deque<int> *BoyerMooreHorspool(std::string pattern, std::string text, int s
 			q->push_back(i);
 		}
 		c = text[i + m - 1];
-		i = i + rt[Ord(c)];
-	}
-	delete rt;
+		i = i + max(1,rt[Ord(c)]); //this change to the book's algorithm allows a minimum increase of i by 1 so no infinite loop
+	};
+
+//	delete[] rt;
 	return q;
 };
 
