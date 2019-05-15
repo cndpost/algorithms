@@ -7,13 +7,16 @@
 #include <string>
 #include <queue>
 
+#define DEBUG 1
+
 int Ord(char ch) {
 	return (ch - 'a');
 };
 
 int  *CreateRtOccurence(std::string pattern, int s)
 {
-	int *rt = new int(pattern.length());
+	std::cout << "CreateRtOccurence for BMH algorithm with pattern: " << pattern << " alphabet size " << s << std::endl;
+	int *rt = new int[s];
 	int m = pattern.length();
 	for (int i = 0; i <= s; i++) {
 		rt[i] = m;
@@ -22,32 +25,70 @@ int  *CreateRtOccurence(std::string pattern, int s)
 	for (int i = 0; i < m; i++) {
 		rt[Ord(pattern[i])] = m - i - 1;
 	}
+
+#ifdef DEBUG
+	for (int i = 0; i < s; i++) {
+		std::cout << rt[i] << std::endl;
+	}
+#endif
+
 	return rt;
+
 };
 
 std::deque<int> *BoyerMooreHorspool(std::string pattern, std::string text, int s)
 {
+	std::cout << "using BMH algorithm to find " << pattern << " in " << text << " assuming lower case alphabet size " << s << std::endl;
+
 	std::deque<int> *q = new std::deque<int>();
 	int m = pattern.length();
 	int n = text.length();
 	int *rt = CreateRtOccurence(pattern, s);
-	int i = 0;
+	int i = 0, j;
+	char c;
 	while (i <= (n - m)) {
+#ifdef DEBUG
+		std::cout << "while 1 i = " << i << std::endl;
+#endif
 		j = m - 1;
-		while ((j >= 0) && (t[i + j] == pattern[j])) {
+		while ((j >= 0) && (text[i + j] == pattern[j])) {
+#ifdef DEBUG
+			std::cout << "while 2 j =" << j << std::endl;
+#endif
 			j--;
 		}
 		if (j < 0) {
-			q.push_back(i);
+			q->push_back(i);
 		}
-		c = t[i + m - i];
+		c = text[i + m - 1];
 		i = i + rt[Ord(c)];
 	}
+	delete rt;
+	return q;
 };
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	std::cout << "Boyer Moore Horspool Algorithm\n";
+
+	//take text and pattern from stdin
+	//output all index that have pattern shown in text
+	std::cout << "enter text:";
+	std::string text;
+	std::cin >> text;
+
+	std::cout << "enter pattern:";
+	std::string pattern;
+	std::cin >> pattern;
+	int s = 26; //assuming we only use lower case a-z
+	std::deque<int> *q = BoyerMooreHorspool(pattern, text, s);
+	std::cout << "size of the output is " << q->size() << std::endl;
+	while (!q->empty()) {
+		std::cout << q->front() << std::endl;
+		q->pop_front();
+	};
+	delete q;
+	return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
