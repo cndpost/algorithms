@@ -13,7 +13,7 @@ int Ord(char ch) {
 	return (ch - 'a')+1;
 };
 
-int  *CreateRtOccurence(std::string pattern, int s)
+int*  CreateRtOccurence(std::string pattern, int s)
 {
 	std::cout << "CreateRtOccurence for BMH algorithm with pattern: " << pattern << " alphabet size " << s << std::endl;
 	int *rt = new int[s];
@@ -70,10 +70,10 @@ std::deque<int> *BoyerMooreHorspool(std::string pattern, std::string text, int s
 			q->push_back(i);
 		}
 		c = text[i + m - 1];
-		i = i + max(1,rt[Ord(c)]); //this change to the book's algorithm allows a minimum increase of i by 1 so no infinite loop
+		i = i + max(1,rt[Ord(c)]); //fix a bug in the book's algorithm so we have a minimum increase of i by 1 so no infinite loop
 	};
 
-//	delete[] rt;
+//	delete[] rt;  //we should do this to avoid memory leak. but this one will cause run time error in vs for writing past heap
 	return q;
 };
 
